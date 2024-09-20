@@ -1,0 +1,27 @@
+.tile {
+  position: relative;
+  width: 100%; /* Make the width of the tile 100% of its grid cell */
+  padding-bottom: 100%; /* This ensures the height is always equal to the width, making the tile square */
+  background-size: cover;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.tile.empty {
+  background-color: #fff; /* Empty tile style */
+  cursor: default;
+}
+
+.tile.can-move {
+  border: 2px solid #00f; /* Highlight tiles that can move */
+}
+
+.tile-number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  color: white;
+  pointer-events: none;
+}
