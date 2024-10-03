@@ -1,33 +1,41 @@
+//Tile.tsx
 import React from 'react';
-import '../styles/Tile.css';
-import pandaImage from '../assets/images/panda.jpg';  // Import the image
 
-type TileProps = {
-  value: number | null;
-  onClick: () => void;
-  isEmpty: boolean;
-  canMove: boolean;
-  row: number;
-  col: number;
-  imageSize: number;
-};
+interface TileProps {
+  tileNumber: number;
+  position: { row: number; col: number };
+  emptyTile: { row: number; col: number };
+  moveTile: (row: number, col: number) => void;
+}
 
-const Tile: React.FC<TileProps> = ({ value, onClick, isEmpty, canMove, row, col, imageSize }) => {
-  const tileSize = imageSize / 6; // 6x6 grid
-  const backgroundPosition = `${-col * tileSize}px ${-row * tileSize}px`;  // Correct part of the image
+const Tile: React.FC<TileProps> = ({ tileNumber, position, emptyTile, moveTile }) => {
+  // Check if the tile is the empty one
+  const isEmpty = tileNumber === -1;
+
+  // Determine if the tile is adjacent to the empty space
+  const isAdjacent =
+    Math.abs(position.row - emptyTile.row) + Math.abs(position.col - emptyTile.col) === 1;
+
+  // Generate the image file path dynamically based on tileNumber
+  const getImagePath = (row: number, col: number) => {
+    return `${process.env.PUBLIC_URL}/images/PuzzleTiles/${row + 1}.${col + 1}.jpg`; // Assuming filenames like "1.1.jpg"
+  };
+
+  const handleClick = () => {
+    if (isAdjacent && !isEmpty) {
+      moveTile(position.row, position.col);
+    }
+  };
 
   return (
-    <div
-      className={`tile ${isEmpty ? 'empty' : ''} ${canMove ? 'can-move' : ''}`}
-      style={{
-        backgroundImage: isEmpty ? '' : `url(${pandaImage})`,
-        backgroundPosition: isEmpty ? 'none' : backgroundPosition,
-        backgroundSize: `${imageSize}px ${imageSize}px`,  // Size the background to fit the full image
-      }}
-      onClick={onClick}
-    >
-      {/* Optional: Display the tile number */}
-      {!isEmpty && <span className="tile-number">{value}</span>}
+    <div className={`tile ${isAdjacent ? 'active' : ''}`} onClick={handleClick}>
+      {!isEmpty && (
+        <img
+          src={getImagePath(Math.floor(tileNumber / 8), tileNumber % 8)}
+          alt={`Tile ${tileNumber}`}
+          className="puzzle-image"
+        />
+      )}
     </div>
   );
 };

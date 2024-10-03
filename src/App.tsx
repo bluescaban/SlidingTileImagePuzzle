@@ -1,15 +1,16 @@
 // src/App.tsx
 import React from 'react';
 import Puzzle from './components/Puzzle.tsx';
-import './styles/Puzzle.css';
+import { PuzzleProvider } from './context/PuzzleContext.tsx';
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <h1>Sliding Puzzle</h1>
-      <Puzzle />
-    </div>
+    <PuzzleProvider>
+      <div className="app-container">
+        <Puzzle />
+      </div>
+    </PuzzleProvider>
   );
-};
+}
 
 export default App;
