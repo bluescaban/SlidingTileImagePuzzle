@@ -14,7 +14,7 @@ const Puzzle: React.FC = () => {
         <div className="p-2 rounded-lg border-4 border-[#FDFE53] bg-white grid grid-cols-8 gap-1">
           {tiles.flat().map((tile, index) => (
             <Tile
-              key={tile}
+              key={index} // Use index as the key to maintain consistent grid layout
               tileNumber={tile}
               position={{ row: Math.floor(index / 8), col: index % 8 }}
               emptyTile={emptyTile}

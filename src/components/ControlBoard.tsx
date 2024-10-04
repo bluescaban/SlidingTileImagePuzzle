@@ -2,23 +2,24 @@ import React from 'react';
 import { usePuzzleContext } from '../context/PuzzleContext.tsx';
 
 const ControlBoard: React.FC = () => {
-  const { reset, jumble, gameStarted, setGameStarted } = usePuzzleContext(); // Removed timer, since it's unused here
+  const { reset, jumble, gameStarted, setGameStarted } = usePuzzleContext();
   const [isPaused, setIsPaused] = React.useState(false);
 
   // Handle the start/pause/resume logic
   const handleStartPause = () => {
-    if (!gameStarted) {
+    if (!gameStarted && !isPaused) {
       // Start the game (jumble pieces and start timer)
       jumble();
       setGameStarted(true);
+      setIsPaused(false); // The game has started, so it's not paused
     } else if (isPaused) {
       // Resume the game
       setIsPaused(false);
-      setGameStarted(true); // Resume the game in the context
+      setGameStarted(true); // Resume the game
     } else {
       // Pause the game
       setIsPaused(true);
-      setGameStarted(false); // Pause the game in the context
+      setGameStarted(false); // Pause the game
     }
   };
 
@@ -26,6 +27,7 @@ const ControlBoard: React.FC = () => {
   const handleReset = () => {
     reset(); // Reset in the context
     setIsPaused(false); // Reset pause state locally
+    setGameStarted(false); // Game is reset, not started
   };
 
   return (
@@ -34,12 +36,12 @@ const ControlBoard: React.FC = () => {
         onClick={handleStartPause}
         className="px-4 py-2 bg-blue-500 text-white rounded"
       >
-        {gameStarted ? (isPaused ? 'Resume' : 'Pause') : 'Start'}
+        {isPaused ? 'Resume' : gameStarted ? 'Pause' : 'Start'}
       </button>
       <button
         onClick={handleReset}
-        className={`px-4 py-2 bg-red-500 text-white rounded ${!gameStarted ? 'opacity-50 cursor-not-allowed' : ''}`}
-        disabled={!gameStarted}
+        className={`px-4 py-2 bg-red-500 text-white rounded ${!gameStarted && !isPaused ? 'opacity-50 cursor-not-allowed' : ''}`}
+        disabled={!gameStarted && !isPaused} // Only enable Reset if the game has started or is paused
       >
         Reset
       </button>
